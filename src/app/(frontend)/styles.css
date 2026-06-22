@@ -1,0 +1,57 @@
+@import 'tailwindcss';
+
+/* Brand tokens → Tailwind theme (utilities + CSS vars). PRD §4. */
+@theme {
+  --color-black: #000000;
+  --color-ink: #333333;
+  --color-mist: #e6e7e8;
+  --color-white: #ffffff;
+  --color-oxblood: #4f060c;
+
+  /* Font families: self-hosted via next/font/local (see fonts.ts). */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-ivyora), Georgia, serif;
+  --font-serif: 'Times New Roman', Times, serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-white);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Respect reduced-motion: kill smooth scroll + animations. PRD §8. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Skip link: off-screen until focused. PRD §8 (a11y landmarks + skip link). */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--color-oxblood);
+  color: var(--color-white);
+}
+
+.skip-link:focus {
+  left: 0;
+}
