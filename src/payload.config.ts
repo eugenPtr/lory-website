@@ -36,8 +36,18 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
+    // Never auto-sync schema on boot. Dev connects to the prod DB for real data,
+    // but must NOT mutate its tables (push wiped the users table before).
+    // Schema changes go through migrations (payload migrate:create + migrate).
+    push: false,
     pool: {
       connectionString: process.env.DATABASE_URL || '',
+      // Wait out Neon cold start (scale-to-zero wake ~0.5-3s) instead of ETIMEDOUT.
+      connectionTimeoutMillis: 15000,
+      // Homepage fires 6 parallel queries; allow them without exhausting Neon's pooler.
+      max: 10,
+      // Stop idle sockets being silently dropped → no stale-connection errors.
+      keepAlive: true,
     },
   }),
   sharp,
@@ -46,6 +56,8 @@ export default buildConfig({
     // Disabled without a token → falls back to local disk for dev.
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      // Direct browser→Blob upload, bypassing Vercel's 4.5MB serverless body limit.
+      clientUploads: true,
       collections: {
         media: true,
       },
