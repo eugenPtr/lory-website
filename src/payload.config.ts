@@ -56,8 +56,14 @@ export default buildConfig({
     // Disabled without a token → falls back to local disk for dev.
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
-      // Direct browser→Blob upload, bypassing Vercel's 4.5MB serverless body limit.
-      clientUploads: true,
+      // Unique blob name per upload. Without it, two files with the same name (common
+      // camera names like IMG_1234.jpg, or re-uploads) collide → "blob already exists".
+      addRandomSuffix: true,
+      // Direct browser→Blob upload to bypass Vercel's 4.5MB serverless body limit.
+      // Only on Vercel: client uploads need a public callbackUrl to register the Media
+      // doc, which localhost can't provide (callback never fires → upload lost). Locally
+      // the server-upload path has no body limit and needs no callback.
+      clientUploads: Boolean(process.env.VERCEL),
       collections: {
         media: true,
       },

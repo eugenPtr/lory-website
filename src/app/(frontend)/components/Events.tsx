@@ -45,6 +45,16 @@ export default function Events({ heading, events }: Props) {
     }
   }, [emblaApi])
 
+  // Autoplay: advance every 5s, wrapping to the start once the last snap is reached.
+  useEffect(() => {
+    if (!emblaApi) return
+    const id = setInterval(() => {
+      if (emblaApi.canScrollNext()) emblaApi.scrollNext()
+      else emblaApi.scrollTo(0)
+    }, 5000)
+    return () => clearInterval(id)
+  }, [emblaApi])
+
   if (events.length === 0) return null
 
   return (

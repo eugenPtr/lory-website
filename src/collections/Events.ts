@@ -79,17 +79,15 @@ export const Events: CollectionConfig = {
     },
     {
       name: 'gallery',
-      type: 'array',
+      type: 'upload',
+      relationTo: 'media',
+      hasMany: true,
       label: 'Galerie',
-      admin: { description: 'Fotografiile afișate în grila cu lightbox.' },
-      fields: [
-        { name: 'image', type: 'upload', relationTo: 'media', required: true },
-        {
-          name: 'alt',
-          type: 'text',
-          admin: { description: 'Text alternativ (opțional; altfel se folosește cel din Media).' },
-        },
-      ],
+      admin: {
+        description:
+          'Fotografiile afișate în grila cu lightbox. Încarci mai multe deodată (selectează ' +
+          'sau trage fișierele în zona de upload). Textul alternativ vine din fișa Media.',
+      },
     },
   ],
 }

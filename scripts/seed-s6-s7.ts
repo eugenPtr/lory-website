@@ -85,11 +85,7 @@ for (const e of events) {
       published: true,
       coverImage: media.id,
       body: rt(e.body),
-      gallery: [
-        { image: media.id, alt: `${e.title} — fotografie 1` },
-        { image: media.id, alt: `${e.title} — fotografie 2` },
-        { image: media.id, alt: `${e.title} — fotografie 3` },
-      ],
+      gallery: [media.id, media.id, media.id],
     },
   })
   console.log(`seeded event "${e.title}" (/evenimente/${slug})`)

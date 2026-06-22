@@ -9,6 +9,7 @@ import config from '@/payload.config'
 import type { Event, Media } from '@/payload-types'
 import { resolveMedia } from '../../components/media'
 import Gallery, { type GallerySlide } from '../../components/Gallery'
+import SiteHeader from '../../components/SiteHeader'
 import '../../styles.css'
 
 const dateFmt = new Intl.DateTimeFormat('ro-RO', {
@@ -83,14 +84,25 @@ export default async function EventDetailPage({
   const event = await getEvent(slug)
   if (!event) notFound()
 
+  const payload = await getPayload({ config: await config })
+  const settings = await payload.findGlobal({ slug: 'site-settings' })
+  const navLabels = {
+    despre: settings.nav?.despre ?? 'Despre mine',
+    servicii: settings.nav?.servicii ?? 'Servicii',
+    pachete: settings.nav?.pachete ?? 'Pachete',
+    evenimente: settings.nav?.evenimente ?? 'Evenimente',
+    testimoniale: settings.nav?.testimoniale ?? 'Testimoniale',
+    contact: settings.nav?.contact ?? 'Contact',
+  }
+
   const cover = resolveMedia(event.coverImage)
   const slides: GallerySlide[] = (event.gallery ?? []).flatMap((item) => {
-    const img = resolveMedia(item.image)
+    const img = resolveMedia(item)
     if (!img?.url) return []
     return [
       {
         src: img.url,
-        alt: item.alt ?? img.alt ?? event.title,
+        alt: img.alt ?? event.title,
         width: img.width ?? undefined,
         height: img.height ?? undefined,
       },
@@ -107,7 +119,14 @@ export default async function EventDetailPage({
   }
 
   return (
-    <main id="main-content" className="bg-white">
+    <>
+      <SiteHeader
+        logoAlt={settings.logoAlt ?? 'Lorena Răuță — Wedding Planner'}
+        labels={navLabels}
+        anchorBase="/"
+        forceSolid
+      />
+      <main id="main-content" className="bg-white">
       <article className="mx-auto max-w-3xl px-6 py-20 lg:py-28">
         <Link
           href="/#evenimente"
@@ -145,6 +164,7 @@ export default async function EventDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-    </main>
+      </main>
+    </>
   )
 }

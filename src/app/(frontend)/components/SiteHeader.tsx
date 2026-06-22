@@ -15,6 +15,12 @@ type NavLabels = {
 type Props = {
   logoAlt: string
   labels: NavLabels
+  // Prefix for anchor hrefs. Empty on the home page (`#despre`); '/' on sub-pages so
+  // links jump back to the home sections (`/#despre`).
+  anchorBase?: string
+  // Force the solid (opaque, dark-logo) header. Sub-pages have no hero, so the
+  // transparent-over-hero state would render invisible on white.
+  forceSolid?: boolean
 }
 
 // Anchor targets are fixed in code (PRD §5 IA); only the labels come from the CMS.
@@ -26,7 +32,7 @@ const ANCHORS: { id: keyof Omit<NavLabels, 'contact'>; href: string }[] = [
   { id: 'testimoniale', href: '#testimoniale' },
 ]
 
-export default function SiteHeader({ logoAlt, labels }: Props) {
+export default function SiteHeader({ logoAlt, labels, anchorBase = '', forceSolid = false }: Props) {
   const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -53,7 +59,7 @@ export default function SiteHeader({ logoAlt, labels }: Props) {
   const closeMenu = useCallback(() => setMenuOpen(false), [])
 
   // Light content (white logo/links) only over the hero with the menu closed.
-  const transparent = !scrolled && !menuOpen
+  const transparent = !forceSolid && !scrolled && !menuOpen
 
   // Lock body scroll, trap focus, ESC to close, restore focus to the toggle. PRD §8.
   useEffect(() => {
@@ -111,7 +117,7 @@ export default function SiteHeader({ logoAlt, labels }: Props) {
         className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-10"
       >
         {/* Logo → scroll to top. */}
-        <a href="#hero" className="flex items-center" onClick={closeMenu}>
+        <a href={`${anchorBase}#hero`} className="flex items-center" onClick={closeMenu}>
           <Image
             src={transparent ? '/logo-white.png' : '/logo-dark.png'}
             alt={logoAlt}
@@ -127,7 +133,7 @@ export default function SiteHeader({ logoAlt, labels }: Props) {
           {ANCHORS.map(({ id, href }) => (
             <li key={id}>
               <a
-                href={href}
+                href={`${anchorBase}${href}`}
                 className={`text-sm tracking-wide transition-colors ${
                   transparent ? 'text-white hover:text-white/70' : 'text-ink hover:text-oxblood'
                 }`}
@@ -138,7 +144,7 @@ export default function SiteHeader({ logoAlt, labels }: Props) {
           ))}
           <li>
             <a
-              href="#contact"
+              href={`${anchorBase}#contact`}
               className="rounded-full bg-oxblood px-5 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90"
             >
               {labels.contact}
@@ -190,7 +196,7 @@ export default function SiteHeader({ logoAlt, labels }: Props) {
             {ANCHORS.map(({ id, href }) => (
               <li key={id}>
                 <a
-                  href={href}
+                  href={`${anchorBase}${href}`}
                   onClick={closeMenu}
                   className="font-display text-2xl text-ink transition-colors hover:text-oxblood"
                 >
@@ -200,7 +206,7 @@ export default function SiteHeader({ logoAlt, labels }: Props) {
             ))}
           </ul>
           <a
-            href="#contact"
+            href={`${anchorBase}#contact`}
             onClick={closeMenu}
             className="mt-10 inline-block w-full rounded-full bg-oxblood px-6 py-3 text-center text-base font-medium text-white"
           >

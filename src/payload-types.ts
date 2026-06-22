@@ -166,6 +166,9 @@ export interface User {
  */
 export interface Media {
   id: number;
+  /**
+   * Se completează automat din numele fișierului dacă e gol.
+   */
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -286,18 +289,9 @@ export interface Event {
     [k: string]: unknown;
   } | null;
   /**
-   * Fotografiile afișate în grila cu lightbox.
+   * Fotografiile afișate în grila cu lightbox. Încarci mai multe deodată (selectează sau trage fișierele în zona de upload). Textul alternativ vine din fișa Media.
    */
-  gallery?:
-    | {
-        image: number | Media;
-        /**
-         * Text alternativ (opțional; altfel se folosește cel din Media).
-         */
-        alt?: string | null;
-        id?: string | null;
-      }[]
-    | null;
+  gallery?: (number | Media)[] | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -477,13 +471,7 @@ export interface EventsSelect<T extends boolean = true> {
   published?: T;
   coverImage?: T;
   body?: T;
-  gallery?:
-    | T
-    | {
-        image?: T;
-        alt?: T;
-        id?: T;
-      };
+  gallery?: T;
   meta?:
     | T
     | {
