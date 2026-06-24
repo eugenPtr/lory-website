@@ -104,6 +104,7 @@ export default function SiteHeader({ logoAlt, labels, anchorBase = '', forceSoli
   }, [menuOpen, closeMenu])
 
   return (
+    <>
     <header
       role="banner"
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
@@ -135,7 +136,7 @@ export default function SiteHeader({ logoAlt, labels, anchorBase = '', forceSoli
               <a
                 href={`${anchorBase}${href}`}
                 className={`text-sm tracking-wide transition-colors ${
-                  transparent ? 'text-white hover:text-white/70' : 'text-ink hover:text-oxblood'
+                  transparent ? 'text-white hover:text-white/70' : 'text-oxblood hover:text-oxblood/70'
                 }`}
               >
                 {labels[id]}
@@ -181,8 +182,11 @@ export default function SiteHeader({ logoAlt, labels, anchorBase = '', forceSoli
           </span>
         </button>
       </nav>
+    </header>
 
-      {/* Mobile full-screen overlay menu. */}
+    {/* Mobile full-screen overlay menu. Rendered as a sibling of <header> — NOT inside
+        it — because the header's backdrop-filter (backdrop-blur) would otherwise become
+        the containing block for this fixed element, collapsing it to the header's height. */}
       {menuOpen && (
         <div
           ref={overlayRef}
@@ -198,7 +202,7 @@ export default function SiteHeader({ logoAlt, labels, anchorBase = '', forceSoli
                 <a
                   href={`${anchorBase}${href}`}
                   onClick={closeMenu}
-                  className="font-display text-2xl text-ink transition-colors hover:text-oxblood"
+                  className="font-ivyora text-2xl text-oxblood transition-colors hover:text-oxblood/70"
                 >
                   {labels[id]}
                 </a>
@@ -214,6 +218,6 @@ export default function SiteHeader({ logoAlt, labels, anchorBase = '', forceSoli
           </a>
         </div>
       )}
-    </header>
+    </>
   )
 }

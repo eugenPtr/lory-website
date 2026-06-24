@@ -1,16 +1,23 @@
 import React from 'react'
 
 import Reveal from './Reveal'
-import type { Testimonial } from '@/payload-types'
+import type { TestimonialsSection } from '@/payload-types'
+
+// Cards now live on the `testimonials-section` global as an array (array ids are strings).
+type Testimonial = NonNullable<TestimonialsSection['cards']>[number]
 
 type Props = {
+  eyebrow?: string | null
+  hideEyebrow?: boolean | null
   heading?: string | null
   testimonials: Testimonial[]
 }
 
 // Testimonials (PRD §7.6). ~4 serif-quote cards; 4-up desktop → stack on mobile.
 // Review JSON-LD (itemReviewed = Lorena) for AIO (PRD §8).
-export default function Testimonials({ heading, testimonials }: Props) {
+export default function Testimonials({ eyebrow, hideEyebrow, heading, testimonials }: Props) {
+  const showEyebrow = !hideEyebrow && !!eyebrow
+  const showIntro = showEyebrow || !!heading
   if (testimonials.length === 0) return null
 
   const jsonLd = {
@@ -26,16 +33,25 @@ export default function Testimonials({ heading, testimonials }: Props) {
   return (
     <section id="testimoniale" className="scroll-mt-16 bg-mist">
       <div className="mx-auto max-w-6xl px-6 py-20 lg:py-28">
-        {heading && (
-          <h2 className="mb-12 text-center font-display text-3xl italic leading-tight text-ink sm:text-4xl">
-            {heading}
-          </h2>
+        {showIntro && (
+          <div className="mb-12">
+            {showEyebrow && (
+              <p className="text-center text-xs uppercase tracking-[0.2em] text-oxblood">
+                {eyebrow}
+              </p>
+            )}
+            {heading && (
+              <h2 className="mx-auto mt-4 max-w-2xl text-center font-ivyora italic text-3xl leading-tight text-ink sm:text-4xl">
+                {heading}
+              </h2>
+            )}
+          </div>
         )}
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {testimonials.map((t) => (
             <Reveal key={t.id}>
               <figure className="flex h-full flex-col rounded-lg bg-white p-6 shadow-sm">
-                <blockquote className="flex-1 font-serif text-lg italic leading-relaxed text-ink">
+                <blockquote className="flex-1 font-times text-lg italic leading-relaxed text-ink">
                   <span aria-hidden="true" className="text-oxblood">
                     “
                   </span>

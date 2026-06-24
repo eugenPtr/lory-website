@@ -11,6 +11,18 @@ export const Services: GlobalConfig = {
   },
   fields: [
     {
+      name: 'eyebrow',
+      type: 'text',
+      defaultValue: 'Servicii',
+      admin: { description: 'Eticheta mică deasupra titlului.' },
+    },
+    {
+      name: 'hideEyebrow',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: { description: 'Ascunde eticheta.' },
+    },
+    {
       name: 'heading',
       type: 'text',
       admin: {

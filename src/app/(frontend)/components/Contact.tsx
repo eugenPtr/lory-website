@@ -7,7 +7,7 @@ type Props = {
   contact: ContactData
 }
 
-// Footer / Contact (PRD §7.7). Dark band; direct links only (decision #10):
+// Footer / Contact (PRD §7.7). Oxblood band; direct links only (decision #10):
 // tappable tel/mailto + Instagram (primary) + Facebook. All copy from the Contact global.
 export default function Contact({ heading, contact }: Props) {
   const { email, phone, instagramUrl, facebookUrl, copyright } = contact
@@ -15,22 +15,22 @@ export default function Contact({ heading, contact }: Props) {
   const telHref = phone ? `tel:${phone.replace(/[^+\d]/g, '')}` : null
 
   return (
-    <footer id="contact" className="scroll-mt-16 bg-black text-white">
+    <footer id="contact" className="scroll-mt-16 bg-oxblood text-white">
       <div className="mx-auto max-w-6xl px-6 py-20 lg:py-28">
-        <h2 className="text-center font-display text-3xl italic sm:text-4xl">{heading}</h2>
+        <h2 className="text-center font-inter text-3xl sm:text-4xl">{heading}</h2>
 
         <div className="mt-10 flex flex-col items-center gap-3 text-lg">
           {telHref && (
             <a
               href={telHref}
-              className="inline-flex min-h-11 items-center transition-colors hover:text-oxblood"
+              className="inline-flex min-h-11 items-center transition-colors hover:text-white/70"
             >
               {phone}
             </a>
           )}
           <a
             href={`mailto:${email}`}
-            className="inline-flex min-h-11 items-center transition-colors hover:text-oxblood"
+            className="inline-flex min-h-11 items-center transition-colors hover:text-white/70"
           >
             {email}
           </a>
@@ -44,7 +44,7 @@ export default function Contact({ heading, contact }: Props) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
-                className="flex h-11 w-11 items-center justify-center transition-colors hover:text-oxblood"
+                className="flex h-11 w-11 items-center justify-center transition-colors hover:text-white/70"
               >
                 <svg
                   aria-hidden="true"
@@ -67,7 +67,7 @@ export default function Contact({ heading, contact }: Props) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
-                className="flex h-11 w-11 items-center justify-center transition-colors hover:text-oxblood"
+                className="flex h-11 w-11 items-center justify-center transition-colors hover:text-white/70"
               >
                 <svg
                   aria-hidden="true"
@@ -83,9 +83,7 @@ export default function Contact({ heading, contact }: Props) {
           </div>
         )}
 
-        {copyright && (
-          <p className="mt-12 text-center text-sm text-white/50">{copyright}</p>
-        )}
+        {copyright && <p className="mt-12 text-center text-sm text-white/50">{copyright}</p>}
       </div>
     </footer>
   )

@@ -8,10 +8,11 @@
   --color-white: #ffffff;
   --color-oxblood: #4f060c;
 
-  /* Font families: self-hosted via next/font/local (see fonts.ts). */
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-display: var(--font-ivyora), Georgia, serif;
-  --font-serif: 'Times New Roman', Times, serif;
+  /* Font families: self-hosted via next/font/local (see fonts.ts).
+     Utilities: font-inter (body/UI), font-ivyora (display titles), font-times. */
+  --font-inter: var(--ff-inter), system-ui, sans-serif;
+  --font-ivyora: var(--ff-ivyora), Georgia, serif;
+  --font-times: 'Times New Roman', Times, serif;
 }
 
 @layer base {
@@ -22,7 +23,7 @@
   body {
     background: var(--color-white);
     color: var(--color-ink);
-    font-family: var(--font-sans);
+    font-family: var(--font-inter);
     -webkit-font-smoothing: antialiased;
   }
 

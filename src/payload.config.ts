@@ -9,13 +9,14 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
-import { Packages } from './collections/Packages'
-import { Testimonials } from './collections/Testimonials'
-import { Events } from './collections/Events'
+import { Events as EventsCollection } from './collections/Events'
 import { SiteSettings } from './globals/SiteSettings'
 import { Hero } from './globals/Hero'
 import { About } from './globals/About'
 import { Services } from './globals/Services'
+import { Packages } from './globals/PackagesSection'
+import { Events } from './globals/EventsSection'
+import { Testimonials } from './globals/TestimonialsSection'
 import { Contact } from './globals/Contact'
 
 const filename = fileURLToPath(import.meta.url)
@@ -28,8 +29,8 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Packages, Testimonials, Events],
-  globals: [SiteSettings, Hero, About, Services, Contact],
+  collections: [Users, Media, EventsCollection],
+  globals: [SiteSettings, Hero, About, Services, Packages, Events, Testimonials, Contact],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

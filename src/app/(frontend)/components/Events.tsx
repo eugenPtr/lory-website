@@ -9,6 +9,8 @@ import { resolveMedia } from './media'
 import type { Event } from '@/payload-types'
 
 type Props = {
+  eyebrow?: string | null
+  hideEyebrow?: boolean | null
   heading?: string | null
   events: Event[]
 }
@@ -21,7 +23,9 @@ const dateFmt = new Intl.DateTimeFormat('ro-RO', {
 
 // Events carousel (PRD §7.5). Embla cards (cover + title/date overlay), newest-first,
 // prev/next + dots. Each card → /evenimente/[slug]. Touch + keyboard + a11y out of the box.
-export default function Events({ heading, events }: Props) {
+export default function Events({ eyebrow, hideEyebrow, heading, events }: Props) {
+  const showEyebrow = !hideEyebrow && !!eyebrow
+  const showIntro = showEyebrow || !!heading
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'start', loop: false })
   const [selected, setSelected] = useState(0)
   const [snaps, setSnaps] = useState<number[]>([])
@@ -60,10 +64,19 @@ export default function Events({ heading, events }: Props) {
   return (
     <section id="evenimente" className="scroll-mt-16 bg-white">
       <div className="mx-auto max-w-6xl px-6 py-20 lg:py-28">
-        {heading && (
-          <h2 className="mb-12 text-center font-display text-3xl italic leading-tight text-ink sm:text-4xl">
-            {heading}
-          </h2>
+        {showIntro && (
+          <div className="mb-12">
+            {showEyebrow && (
+              <p className="text-center text-xs uppercase tracking-[0.2em] text-oxblood">
+                {eyebrow}
+              </p>
+            )}
+            {heading && (
+              <h2 className="mx-auto mt-4 max-w-2xl text-center font-ivyora italic text-3xl leading-tight text-ink sm:text-4xl">
+                {heading}
+              </h2>
+            )}
+          </div>
         )}
 
         <div className="overflow-hidden" ref={emblaRef}>
@@ -95,7 +108,7 @@ export default function Events({ heading, events }: Props) {
                           {dateFmt.format(new Date(event.eventDate))}
                         </p>
                       )}
-                      <h3 className="mt-2 font-display text-2xl italic text-white">{event.title}</h3>
+                      <h3 className="mt-2 font-ivyora text-2xl italic text-white">{event.title}</h3>
                     </div>
                   </Link>
                 </li>

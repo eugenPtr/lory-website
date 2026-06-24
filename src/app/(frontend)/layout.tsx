@@ -14,7 +14,7 @@ export default function RootLayout(props: { children: React.ReactNode }) {
 
   return (
     <html lang="ro" className={`${ivyOra.variable} ${inter.variable}`}>
-      <body className="font-sans">
+      <body className="font-inter">
         <a href="#main-content" className="skip-link">
           Sari la conținut
         </a>

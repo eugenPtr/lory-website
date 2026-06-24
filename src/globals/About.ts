@@ -19,9 +19,14 @@ export const About: GlobalConfig = {
       },
     },
     {
+      name: 'hideEyebrow',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: { description: 'Ascunde eticheta.' },
+    },
+    {
       name: 'heading',
       type: 'text',
-      required: true,
       defaultValue: 'Planificare cu claritate, de la prima conversație',
       admin: {
         description: 'Titlu în display italic.',

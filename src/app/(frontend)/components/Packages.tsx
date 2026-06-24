@@ -4,18 +4,24 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
 
 import Reveal from './Reveal'
-import type { Package } from '@/payload-types'
+import type { PackagesSection } from '@/payload-types'
+
+// Cards now live on the `packages-section` global as an array (array ids are strings).
+type Package = NonNullable<PackagesSection['cards']>[number]
 
 type Props = {
   eyebrow?: string | null
+  hideEyebrow?: boolean | null
   heading?: string | null
   packages: Package[]
 }
 
 // Packages (PRD §7.4). 2–5 cards, one may be highlighted; hover lift; "Detalii" opens an
 // accessible modal (focus-trap, ESC, restore focus). Service JSON-LD for AIO (PRD §8).
-export default function Packages({ eyebrow, heading, packages }: Props) {
-  const [openId, setOpenId] = useState<number | null>(null)
+export default function Packages({ eyebrow, hideEyebrow, heading, packages }: Props) {
+  const showEyebrow = !hideEyebrow && !!eyebrow
+  const showIntro = showEyebrow || !!heading
+  const [openId, setOpenId] = useState<string | null>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
   const openerRef = useRef<HTMLButtonElement | null>(null)
 
@@ -30,9 +36,7 @@ export default function Packages({ eyebrow, heading, packages }: Props) {
 
     const focusables = () =>
       Array.from(
-        overlayRef.current?.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled])',
-        ) ?? [],
+        overlayRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])') ?? [],
       )
     focusables()[0]?.focus()
 
@@ -79,16 +83,22 @@ export default function Packages({ eyebrow, heading, packages }: Props) {
   return (
     <section id="pachete" className="scroll-mt-16 bg-white">
       <div className="mx-auto max-w-6xl px-6 py-20 lg:py-28">
-        {eyebrow && (
-          <p className="text-center text-xs uppercase tracking-[0.2em] text-oxblood">{eyebrow}</p>
-        )}
-        {heading && (
-          <h2 className="mx-auto mt-4 max-w-2xl text-center font-display text-3xl italic leading-tight text-ink sm:text-4xl">
-            {heading}
-          </h2>
+        {showIntro && (
+          <div className="mb-12">
+            {showEyebrow && (
+              <p className="text-center text-xs uppercase tracking-[0.2em] text-oxblood">
+                {eyebrow}
+              </p>
+            )}
+            {heading && (
+              <h2 className="mx-auto mt-4 max-w-2xl text-center font-ivyora italic text-3xl leading-tight text-ink sm:text-4xl">
+                {heading}
+              </h2>
+            )}
+          </div>
         )}
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {packages.map((p) => (
             <Reveal key={p.id}>
               <article
@@ -98,7 +108,7 @@ export default function Packages({ eyebrow, heading, packages }: Props) {
                     : 'border-mist bg-white'
                 }`}
               >
-                <h3 className="font-display text-2xl italic text-ink">{p.title}</h3>
+                <h3 className="font-ivyora text-2xl italic text-ink">{p.title}</h3>
                 {p.subtitle && <p className="mt-2 text-sm text-ink/70">{p.subtitle}</p>}
                 {p.cardBullets && p.cardBullets.length > 0 && (
                   <ul className="mt-6 space-y-2 text-sm leading-relaxed text-ink/80">
@@ -117,12 +127,10 @@ export default function Packages({ eyebrow, heading, packages }: Props) {
                     type="button"
                     onClick={(e) => {
                       openerRef.current = e.currentTarget
-                      setOpenId(p.id)
+                      setOpenId(p.id ?? null)
                     }}
                     className={`mt-8 inline-flex min-h-11 items-center justify-center self-start rounded-full px-6 text-sm font-medium transition-opacity hover:opacity-90 ${
-                      p.highlighted
-                        ? 'bg-oxblood text-white'
-                        : 'border border-oxblood text-oxblood'
+                      p.highlighted ? 'bg-oxblood text-white' : 'border border-oxblood text-oxblood'
                     }`}
                     aria-haspopup="dialog"
                   >
@@ -141,11 +149,7 @@ export default function Packages({ eyebrow, heading, packages }: Props) {
           className="fixed inset-0 z-[60] flex items-center justify-center p-4"
           role="presentation"
         >
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={close}
-            aria-hidden="true"
-          />
+          <div className="absolute inset-0 bg-black/50" onClick={close} aria-hidden="true" />
           <div
             ref={overlayRef}
             role="dialog"
@@ -163,10 +167,10 @@ export default function Packages({ eyebrow, heading, packages }: Props) {
                 ×
               </span>
             </button>
-            <h3 className="pr-10 font-display text-2xl italic text-ink">{active.title}</h3>
+            <h3 className="pr-10 font-ivyora text-2xl italic text-ink">{active.title}</h3>
             {active.subtitle && <p className="mt-1 text-sm text-ink/70">{active.subtitle}</p>}
             {active.modalContent && (
-              <div className="mt-6 space-y-4 leading-relaxed text-ink/80 [&_a]:text-oxblood [&_a]:underline [&_h3]:font-display [&_h3]:text-xl [&_li]:ml-4 [&_li]:list-disc">
+              <div className="mt-6 space-y-4 leading-relaxed text-ink/80 [&_a]:text-oxblood [&_a]:underline [&_h3]:font-ivyora [&_h3]:text-xl [&_li]:ml-4 [&_li]:list-disc">
                 <RichText data={active.modalContent} />
               </div>
             )}

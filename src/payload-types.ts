@@ -69,8 +69,6 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
-    packages: Package;
-    testimonials: Testimonial;
     events: Event;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -81,8 +79,6 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
-    packages: PackagesSelect<false> | PackagesSelect<true>;
-    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -98,6 +94,9 @@ export interface Config {
     hero: Hero;
     about: About;
     services: Service;
+    'packages-section': PackagesSection;
+    'events-section': EventsSection;
+    'testimonials-section': TestimonialsSection;
     contact: Contact;
   };
   globalsSelect: {
@@ -105,6 +104,9 @@ export interface Config {
     hero: HeroSelect<false> | HeroSelect<true>;
     about: AboutSelect<false> | AboutSelect<true>;
     services: ServicesSelect<false> | ServicesSelect<true>;
+    'packages-section': PackagesSectionSelect<false> | PackagesSectionSelect<true>;
+    'events-section': EventsSectionSelect<false> | EventsSectionSelect<true>;
+    'testimonials-section': TestimonialsSectionSelect<false> | TestimonialsSectionSelect<true>;
     contact: ContactSelect<false> | ContactSelect<true>;
   };
   locale: null;
@@ -181,71 +183,6 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "packages".
- */
-export interface Package {
-  id: number;
-  title: string;
-  /**
-   * Subtitlu scurt afișat pe card.
-   */
-  subtitle?: string | null;
-  cardBullets?:
-    | {
-        text: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Conținut detaliat afișat în modalul „Detalii”.
-   */
-  modalContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * Evidențiază acest pachet (accent oxblood).
-   */
-  highlighted?: boolean | null;
-  /**
-   * Ordinea de afișare (crescător).
-   */
-  order?: number | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials".
- */
-export interface Testimonial {
-  id: number;
-  quote: string;
-  authorName: string;
-  /**
-   * Rol / context (ex. „Mireasă, nuntă 2025”).
-   */
-  authorRole?: string | null;
-  /**
-   * Ordinea de afișare (crescător).
-   */
-  order?: number | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -336,14 +273,6 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
-        relationTo: 'packages';
-        value: number | Package;
-      } | null)
-    | ({
-        relationTo: 'testimonials';
-        value: number | Testimonial;
-      } | null)
-    | ({
         relationTo: 'events';
         value: number | Event;
       } | null);
@@ -431,37 +360,6 @@ export interface MediaSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "packages_select".
- */
-export interface PackagesSelect<T extends boolean = true> {
-  title?: T;
-  subtitle?: T;
-  cardBullets?:
-    | T
-    | {
-        text?: T;
-        id?: T;
-      };
-  modalContent?: T;
-  highlighted?: T;
-  order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "testimonials_select".
- */
-export interface TestimonialsSelect<T extends boolean = true> {
-  quote?: T;
-  authorName?: T;
-  authorRole?: T;
-  order?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "events_select".
  */
 export interface EventsSelect<T extends boolean = true> {
@@ -532,26 +430,6 @@ export interface SiteSetting {
    * Text alternativ pentru logo (accesibilitate + SEO).
    */
   logoAlt: string;
-  nav: {
-    despre: string;
-    servicii: string;
-    pachete: string;
-    evenimente: string;
-    testimoniale: string;
-    contact: string;
-  };
-  sections?: {
-    packages?: {
-      eyebrow?: string | null;
-      heading?: string | null;
-    };
-    events?: {
-      heading?: string | null;
-    };
-    testimonials?: {
-      heading?: string | null;
-    };
-  };
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -587,9 +465,13 @@ export interface About {
    */
   eyebrow?: string | null;
   /**
+   * Ascunde eticheta.
+   */
+  hideEyebrow?: boolean | null;
+  /**
    * Titlu în display italic.
    */
-  heading: string;
+  heading?: string | null;
   /**
    * Text la persoana întâi.
    */
@@ -619,6 +501,14 @@ export interface About {
 export interface Service {
   id: number;
   /**
+   * Eticheta mică deasupra titlului.
+   */
+  eyebrow?: string | null;
+  /**
+   * Ascunde eticheta.
+   */
+  hideEyebrow?: boolean | null;
+  /**
    * Titlu opțional al secțiunii.
    */
   heading?: string | null;
@@ -626,6 +516,124 @@ export interface Service {
     | {
         title: string;
         body: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "packages-section".
+ */
+export interface PackagesSection {
+  id: number;
+  /**
+   * Eticheta mică deasupra titlului.
+   */
+  eyebrow?: string | null;
+  /**
+   * Ascunde eticheta.
+   */
+  hideEyebrow?: boolean | null;
+  /**
+   * Titlu opțional al secțiunii.
+   */
+  heading?: string | null;
+  /**
+   * 2–5 pachete. Ordinea de aici = ordinea de afișare.
+   */
+  cards?:
+    | {
+        title: string;
+        /**
+         * Subtitlu scurt afișat pe card.
+         */
+        subtitle?: string | null;
+        cardBullets?:
+          | {
+              text: string;
+              id?: string | null;
+            }[]
+          | null;
+        /**
+         * Conținut detaliat afișat în modalul „Detalii”.
+         */
+        modalContent?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        /**
+         * Evidențiază acest pachet (accent oxblood).
+         */
+        highlighted?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events-section".
+ */
+export interface EventsSection {
+  id: number;
+  /**
+   * Eticheta mică deasupra titlului.
+   */
+  eyebrow?: string | null;
+  /**
+   * Ascunde eticheta.
+   */
+  hideEyebrow?: boolean | null;
+  /**
+   * Titlu opțional al secțiunii.
+   */
+  heading?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials-section".
+ */
+export interface TestimonialsSection {
+  id: number;
+  /**
+   * Eticheta mică deasupra titlului.
+   */
+  eyebrow?: string | null;
+  /**
+   * Ascunde eticheta.
+   */
+  hideEyebrow?: boolean | null;
+  /**
+   * Titlu opțional al secțiunii.
+   */
+  heading?: string | null;
+  /**
+   * ~4 testimoniale. Ordinea de aici = ordinea de afișare.
+   */
+  cards?:
+    | {
+        quote: string;
+        authorName: string;
+        /**
+         * Rol / context (ex. „Mireasă, nuntă 2025”).
+         */
+        authorRole?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -655,36 +663,6 @@ export interface Contact {
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
   logoAlt?: T;
-  nav?:
-    | T
-    | {
-        despre?: T;
-        servicii?: T;
-        pachete?: T;
-        evenimente?: T;
-        testimoniale?: T;
-        contact?: T;
-      };
-  sections?:
-    | T
-    | {
-        packages?:
-          | T
-          | {
-              eyebrow?: T;
-              heading?: T;
-            };
-        events?:
-          | T
-          | {
-              heading?: T;
-            };
-        testimonials?:
-          | T
-          | {
-              heading?: T;
-            };
-      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -707,6 +685,7 @@ export interface HeroSelect<T extends boolean = true> {
  */
 export interface AboutSelect<T extends boolean = true> {
   eyebrow?: T;
+  hideEyebrow?: T;
   heading?: T;
   body?: T;
   photo?: T;
@@ -719,12 +698,73 @@ export interface AboutSelect<T extends boolean = true> {
  * via the `definition` "services_select".
  */
 export interface ServicesSelect<T extends boolean = true> {
+  eyebrow?: T;
+  hideEyebrow?: T;
   heading?: T;
   columns?:
     | T
     | {
         title?: T;
         body?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "packages-section_select".
+ */
+export interface PackagesSectionSelect<T extends boolean = true> {
+  eyebrow?: T;
+  hideEyebrow?: T;
+  heading?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        cardBullets?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        modalContent?: T;
+        highlighted?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events-section_select".
+ */
+export interface EventsSectionSelect<T extends boolean = true> {
+  eyebrow?: T;
+  hideEyebrow?: T;
+  heading?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials-section_select".
+ */
+export interface TestimonialsSectionSelect<T extends boolean = true> {
+  eyebrow?: T;
+  hideEyebrow?: T;
+  heading?: T;
+  cards?:
+    | T
+    | {
+        quote?: T;
+        authorName?: T;
+        authorRole?: T;
         id?: T;
       };
   updatedAt?: T;

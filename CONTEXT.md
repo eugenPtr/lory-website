@@ -39,6 +39,23 @@ marked as highlighted/featured.
 A short client quote shown in the Testimonials section, with the author's name and a
 role/label. Around four are shown.
 
+### Eyebrow
+The small upper-case oxblood label that introduces a **Section** (visually styled to
+match the navbar link). It is an editable per-Section CMS field, defaulted to that
+Section's navlink wording but independently changeable. Each Section can hide its
+Eyebrow via a toggle in the CMS.
+
+### Section settings vs Cards
+Every one of the 5 content Sections is configured the same way: a CMS page holding its
+**Eyebrow** (+ hide toggle) and optional **Section heading**. For Sections backed by a
+list (Packages, Events, Testimonials), the repeating items ("Cards") live in a separate
+collection, kept distinct from the Section's settings page.
+
+### Section heading
+The optional larger title beneath a Section's **Eyebrow**, set per-Section in the CMS
+and allowed to be empty. When empty, the Section shows only its Eyebrow (or nothing, if
+the Eyebrow is also hidden). Distinct from the Eyebrow, which is derived from the navlink.
+
 ### Language
 Site language is **Romanian** (`lang="ro"`). Specific industry terms stay in English
 verbatim as content (e.g. "Wedding Planner", "Event Design", "Full-Service planning").

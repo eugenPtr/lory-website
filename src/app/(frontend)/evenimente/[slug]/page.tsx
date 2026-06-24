@@ -87,12 +87,12 @@ export default async function EventDetailPage({
   const payload = await getPayload({ config: await config })
   const settings = await payload.findGlobal({ slug: 'site-settings' })
   const navLabels = {
-    despre: settings.nav?.despre ?? 'Despre mine',
-    servicii: settings.nav?.servicii ?? 'Servicii',
-    pachete: settings.nav?.pachete ?? 'Pachete',
-    evenimente: settings.nav?.evenimente ?? 'Evenimente',
-    testimoniale: settings.nav?.testimoniale ?? 'Testimoniale',
-    contact: settings.nav?.contact ?? 'Contact',
+    despre: 'Despre mine',
+    servicii: 'Servicii',
+    pachete: 'Pachete',
+    evenimente: 'Evenimente',
+    testimoniale: 'Testimoniale',
+    contact: 'Contact',
   }
 
   const cover = resolveMedia(event.coverImage)
@@ -142,13 +142,13 @@ export default async function EventDetailPage({
               {dateFmt.format(new Date(event.eventDate))}
             </p>
           )}
-          <h1 className="mt-3 font-display text-4xl italic leading-tight text-ink sm:text-5xl">
+          <h1 className="mt-3 font-ivyora text-4xl italic leading-tight text-ink sm:text-5xl">
             {event.title}
           </h1>
         </header>
 
         {event.body && (
-          <div className="mt-8 space-y-4 leading-relaxed text-ink/80 [&_a]:text-oxblood [&_a]:underline [&_h2]:mt-8 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:italic [&_li]:ml-4 [&_li]:list-disc">
+          <div className="mt-8 space-y-4 leading-relaxed text-ink/80 [&_a]:text-oxblood [&_a]:underline [&_h2]:mt-8 [&_h2]:font-ivyora [&_h2]:text-2xl [&_h2]:italic [&_li]:ml-4 [&_li]:list-disc">
             <RichText data={event.body} />
           </div>
         )}

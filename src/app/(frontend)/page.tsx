@@ -14,30 +14,31 @@ import './styles.css'
 
 export default async function HomePage() {
   const payload = await getPayload({ config: await config })
-  const [settings, hero, about, services, packages, events, testimonials, contact] =
+  const [settings, hero, about, services, packages, events, testimonials, eventsCards, contact] =
     await Promise.all([
       payload.findGlobal({ slug: 'site-settings' }),
       payload.findGlobal({ slug: 'hero' }),
       payload.findGlobal({ slug: 'about' }),
       payload.findGlobal({ slug: 'services' }),
-      payload.find({ collection: 'packages', sort: 'order', limit: 5 }),
+      payload.findGlobal({ slug: 'packages-section' }),
+      payload.findGlobal({ slug: 'events-section' }),
+      payload.findGlobal({ slug: 'testimonials-section' }),
       payload.find({
         collection: 'events',
         where: { published: { equals: true } },
         sort: '-eventDate',
         limit: 24,
       }),
-      payload.find({ collection: 'testimonials', sort: 'order', limit: 4 }),
       payload.findGlobal({ slug: 'contact' }),
     ])
 
   const labels = {
-    despre: settings.nav?.despre ?? 'Despre mine',
-    servicii: settings.nav?.servicii ?? 'Servicii',
-    pachete: settings.nav?.pachete ?? 'Pachete',
-    evenimente: settings.nav?.evenimente ?? 'Evenimente',
-    testimoniale: settings.nav?.testimoniale ?? 'Testimoniale',
-    contact: settings.nav?.contact ?? 'Contact',
+    despre: 'Despre mine',
+    servicii: 'Servicii',
+    pachete: 'Pachete',
+    evenimente: 'Evenimente',
+    testimoniale: 'Testimoniale',
+    contact: 'Contact',
   }
 
   return (
@@ -51,20 +52,34 @@ export default async function HomePage() {
         />
         <About
           eyebrow={about.eyebrow}
+          hideEyebrow={about.hideEyebrow}
           heading={about.heading}
           body={about.body}
           photo={about.photo}
         />
-        <Services heading={services.heading} columns={services.columns ?? []} />
-        <Packages
-          eyebrow={settings.sections?.packages?.eyebrow}
-          heading={settings.sections?.packages?.heading}
-          packages={packages.docs}
+        <Services
+          eyebrow={services.eyebrow}
+          hideEyebrow={services.hideEyebrow}
+          heading={services.heading}
+          columns={services.columns ?? []}
         />
-        <Events heading={settings.sections?.events?.heading} events={events.docs} />
+        <Packages
+          eyebrow={packages.eyebrow}
+          hideEyebrow={packages.hideEyebrow}
+          heading={packages.heading}
+          packages={packages.cards ?? []}
+        />
+        <Events
+          eyebrow={events.eyebrow}
+          hideEyebrow={events.hideEyebrow}
+          heading={events.heading}
+          events={eventsCards.docs}
+        />
         <Testimonials
-          heading={settings.sections?.testimonials?.heading}
-          testimonials={testimonials.docs}
+          eyebrow={testimonials.eyebrow}
+          hideEyebrow={testimonials.hideEyebrow}
+          heading={testimonials.heading}
+          testimonials={testimonials.cards ?? []}
         />
       </main>
       <Contact heading={labels.contact} contact={contact} />

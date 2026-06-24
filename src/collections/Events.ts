@@ -23,6 +23,11 @@ export const Events: CollectionConfig = {
     group: 'Conținut',
     useAsTitle: 'title',
     defaultColumns: ['title', 'eventDate', 'published'],
+    components: {
+      // Section intro (eyebrow/heading) edited inline above the list, so everything under
+      // "Events" lives on one page. Backed by the hidden `events-section` global.
+      beforeListTable: ['/components/admin/EventsSectionIntro#EventsSectionIntro'],
+    },
   },
   // Carousel order: newest first (decision #4). Detail queries hit the slug directly.
   defaultSort: '-eventDate',
