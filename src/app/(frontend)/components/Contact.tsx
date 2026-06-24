@@ -17,7 +17,7 @@ export default function Contact({ heading, contact }: Props) {
   return (
     <footer id="contact" className="scroll-mt-16 bg-oxblood text-white">
       <div className="mx-auto max-w-6xl px-6 py-20 lg:py-28">
-        <h2 className="text-center font-inter text-3xl sm:text-4xl">{heading}</h2>
+        <p className="text-center text-xs uppercase tracking-[0.2em]">{heading}</p>
 
         <div className="mt-10 flex flex-col items-center gap-3 text-lg">
           {telHref && (
