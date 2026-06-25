@@ -1,7 +1,10 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateHome } from '../hooks/revalidate'
+
 // Services: 2 columns, no icons (PRD §7.3). Fixed at 2 rows to protect the layout.
 export const Services: GlobalConfig = {
+  hooks: { afterChange: [revalidateHome] },
   slug: 'services',
   access: {
     read: () => true,

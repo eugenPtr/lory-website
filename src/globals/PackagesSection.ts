@@ -1,10 +1,13 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateHome } from '../hooks/revalidate'
+
 // Packages section (PRD §7.4). Intro (eyebrow/heading) + the package cards live in one
 // place, mirroring the Services global. Replaces the former `packages` collection +
 // `packages-section` intro global. Slug stays `packages-section` (table `packages_section`)
 // to avoid a table rename; the admin label is "Packages".
 export const Packages: GlobalConfig = {
+  hooks: { afterChange: [revalidateHome] },
   slug: 'packages-section',
   access: { read: () => true },
   label: 'Packages',

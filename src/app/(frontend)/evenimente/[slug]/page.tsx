@@ -12,6 +12,10 @@ import Gallery, { type GallerySlide } from '../../components/Gallery'
 import SiteHeader from '../../components/SiteHeader'
 import '../../styles.css'
 
+// Fallback ISR alongside on-demand revalidation (Payload Events hooks). Also lets newly
+// published events not present at build time render + cache on first request.
+export const revalidate = 300
+
 const dateFmt = new Intl.DateTimeFormat('ro-RO', {
   day: 'numeric',
   month: 'long',

@@ -1,10 +1,13 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateHome } from '../hooks/revalidate'
+
 // Events section intro (eyebrow/heading). Events themselves stay a collection (each has
 // its own /evenimente/[slug] page + SEO), so this intro can't fold into an array like
 // Packages/Testimonials. Instead it's hidden from the nav and edited inline above the
 // Events list via the `beforeList` component on the Events collection.
 export const Events: GlobalConfig = {
+  hooks: { afterChange: [revalidateHome] },
   slug: 'events-section',
   access: { read: () => true },
   label: 'Evenimente',

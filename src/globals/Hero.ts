@@ -1,8 +1,11 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateHome } from '../hooks/revalidate'
+
 // Hero splash. Presentational component receives these via props (PRD §6 convention).
 // Strongest SEO/AIO signal: carries the accessible H1. PRD §7.1 / decision #12.
 export const Hero: GlobalConfig = {
+  hooks: { afterChange: [revalidateHome] },
   slug: 'hero',
   access: {
     read: () => true,

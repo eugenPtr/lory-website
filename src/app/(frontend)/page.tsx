@@ -12,6 +12,10 @@ import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
 import './styles.css'
 
+// Fallback ISR: CMS edits trigger on-demand revalidation via Payload hooks, but this also
+// caps how long any stale page can live if a revalidate ever misses.
+export const revalidate = 300
+
 export default async function HomePage() {
   const payload = await getPayload({ config: await config })
   const [settings, hero, about, services, packages, events, testimonials, eventsCards, contact] =

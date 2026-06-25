@@ -1,10 +1,13 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateHome } from '../hooks/revalidate'
+
 // Testimonials section (PRD §7.6). Intro (eyebrow/heading) + the quote cards live in one
 // place, mirroring the Services global. Replaces the former `testimonials` collection +
 // `testimonials-section` intro global. Slug stays `testimonials-section`
 // (table `testimonials_section`) to avoid a table rename; the admin label is "Testimonials".
 export const Testimonials: GlobalConfig = {
+  hooks: { afterChange: [revalidateHome] },
   slug: 'testimonials-section',
   access: { read: () => true },
   label: 'Testimonials',

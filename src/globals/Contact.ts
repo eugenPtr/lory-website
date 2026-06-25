@@ -1,7 +1,10 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateHome } from '../hooks/revalidate'
+
 // Contact / footer (PRD §6 / §7.7). Direct links only (decision #10): tel/mailto + socials.
 export const Contact: GlobalConfig = {
+  hooks: { afterChange: [revalidateHome] },
   slug: 'contact',
   access: {
     read: () => true,

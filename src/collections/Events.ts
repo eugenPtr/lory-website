@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateEvent, revalidateEventDelete } from '../hooks/revalidate'
+
 // Slug from title: lowercase, strip Romanian diacritics (ă â î ș ț → a a i s t via NFD +
 // diacritic strip), non-alphanumerics → hyphens. Editable in the sidebar; auto-filled blank.
 const slugify = (input: string): string =>
@@ -31,6 +33,11 @@ export const Events: CollectionConfig = {
   },
   // Carousel order: newest first (decision #4). Detail queries hit the slug directly.
   defaultSort: '-eventDate',
+  // Bust the static cache for `/` and the event's detail page on every change/removal.
+  hooks: {
+    afterChange: [revalidateEvent],
+    afterDelete: [revalidateEventDelete],
+  },
   fields: [
     { name: 'title', type: 'text', required: true },
     {

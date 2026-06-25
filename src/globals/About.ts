@@ -1,7 +1,10 @@
 import type { GlobalConfig } from 'payload'
 
+import { revalidateHome } from '../hooks/revalidate'
+
 // About section content. Text left / photo right (PRD §7.2). Presentational consumer.
 export const About: GlobalConfig = {
+  hooks: { afterChange: [revalidateHome] },
   slug: 'about',
   access: {
     read: () => true,
