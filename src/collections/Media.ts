@@ -1,9 +1,17 @@
 import type { CollectionConfig } from 'payload'
 
+import { revalidateMedia, revalidateMediaDelete } from '../hooks/revalidate'
+
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
     read: () => true,
+  },
+  // Replacing a file / editing a Media doc must bust the static pages that render it; the
+  // referencing event/global rows don't change, so only a Media-level hook catches this.
+  hooks: {
+    afterChange: [revalidateMedia],
+    afterDelete: [revalidateMediaDelete],
   },
   fields: [
     {
